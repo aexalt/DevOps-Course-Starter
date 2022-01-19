@@ -11,8 +11,38 @@
     <div class="col-md-12">
       <h2>Items</h2>
       <ul class="list-group mb-4">
-        <!-- List the todo items here -->
+        <table border = 1>
+        {% for t in result %}
+          <tr>
+            <td>{{ t['title'] }}</td><td>{{t['status']}}</td>
+            <td></td>
+          </tr>
+        {% endfor %}
+        </table>
       </ul>
     </div>
   </div>
+
+  <form action="add" method="post" class="form-example">
+    <div class="form-example">
+      <label for="id">Enter ID: </label>
+      <input type="number" name="id" id="id" >
+    </div>
+    <div class="form-example">
+      <label for="status">enter status: </label>
+      <input type="text" name="status" id="status" >
+    </div>
+    <div class="form-example">
+      <label for="title">Enter title: </label>
+      <input type="text" name="title" id="title" required>
+    </div>
+    <div class="form-example">
+      <input type="submit" value="submit new!">
+    </div>
+  </form>
+
+  <div>
+    {{success}}
+  </div>
+  
 {% endblock %}
