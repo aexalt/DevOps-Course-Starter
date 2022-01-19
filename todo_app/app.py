@@ -32,7 +32,7 @@ def complete():
     error = None
     if not request.args.get('id','').isspace():
         item = get_item(request.args.get('id',''))
-        item.status = 'complete'
+        item['status'] = 'complete'
         save_item(item)
         return render_template('index.html', success="successfully written", result = get_items())
     else:
