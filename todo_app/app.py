@@ -6,12 +6,36 @@ from todo_app.data.session_items import add_item
 from todo_app.data.session_items import get_item
 from todo_app.data.session_items import save_item
 
+import requests
+import os
+
 app = Flask(__name__)
 app.config.from_object(Config())
 
 
 @app.route('/')
 def index():
+
+    url = ""
+
+    os.getenv("TRELLO_API_KEY")
+
+    querys = {
+        "key": os.getenv("TRELLO_API_KEY"),
+        "token": os.getenv("TRELLO_API_TOKEN"),
+        "cards": "open"
+    }
+
+    response = requests.request("GET", url, params=querys).json()
+    #respons_json = response.json()
+
+    for tello_list in response_json:
+        for card in trello_list['cards']:
+            print(card)
+            card['status'] = trello_list['name']
+
+    items = response_json[0]['cards']
+
     return render_template('index.html', result = get_items())
 
 @app.route('/add', methods=['POST'])
