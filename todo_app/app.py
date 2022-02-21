@@ -16,9 +16,10 @@ app.config.from_object(Config())
 @app.route('/')
 def index():
 
-    url = ""
+    board_id = os.getenv("TRELLO_BOARD_ID")
+    url = "https://api.trello.com/1/boards/"+ board_id +"/lists/" 
 
-    os.getenv("TRELLO_API_KEY")
+    
 
     querys = {
         "key": os.getenv("TRELLO_API_KEY"),
@@ -29,12 +30,13 @@ def index():
     response = requests.request("GET", url, params=querys).json()
     #respons_json = response.json()
 
-    for tello_list in response_json:
+    print(response)
+    for trello_list in response:
         for card in trello_list['cards']:
             print(card)
             card['status'] = trello_list['name']
 
-    items = response_json[0]['cards']
+    items = response[0]['cards']
 
     return render_template('index.html', result = get_items())
 

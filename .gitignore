@@ -117,4 +117,4 @@ env/
 .venv/
 
 ### Configuration files ###
-#.env
+.env
