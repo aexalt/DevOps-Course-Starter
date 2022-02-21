@@ -19,8 +19,6 @@ def index():
     board_id = os.getenv("TRELLO_BOARD_ID")
     url = "https://api.trello.com/1/boards/"+ board_id +"/lists/" 
 
-    
-
     querys = {
         "key": os.getenv("TRELLO_API_KEY"),
         "token": os.getenv("TRELLO_API_TOKEN"),
