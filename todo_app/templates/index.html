@@ -16,16 +16,23 @@
             <tr>
               <th scope="col">title</th>
               <th scope="col">status</th>
+              <th scope="col">description</th>
               <th scope="col">action</th>
 
             </tr>
           </thead>
         {% for t in result %}
           <tr>
-            <td>{{ t['name'] }}</td><td>{{t['status']}}</td>
+            <td>{{ t['name'] }}</td>
+            <td>{{t['status']}}</td>
+            <td>{{t['desc']}}</td>
+            
             {% if t['status'] == "To Do"%}
-            <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
+              <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
+            {% elif t['status'] == "Done"%}
+              <td><a href="./reset?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Reset'></a></td>
             {% endif %}
+
           </tr>
         {% endfor %}
         </table>
@@ -35,16 +42,12 @@
 
   <form action="add" method="post" class="form-example">
     <div class="form-example">
-      <label for="id">Enter ID: </label>
-      <input type="number" name="id" id="id" >
-    </div>
-    <div class="form-example">
-      <label for="status">enter status: </label>
-      <input type="text" name="status" id="status" >
-    </div>
-    <div class="form-example">
       <label for="title">Enter title: </label>
       <input type="text" name="title" id="title" required>
+    </div>
+    <div class="form-example">
+      <label for="desc">enter description: </label>
+      <input type="text" name="desc" id="desc" >
     </div>
     <div class="form-example">
       <input type="submit"  class="btn btn-primary" value="submit new!">

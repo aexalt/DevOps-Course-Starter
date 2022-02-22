@@ -17,16 +17,16 @@ def trello_get_items():
             session["done_list_id"] = trello_list['id']
         for card in trello_list['cards']:
             Items.append(Item.from_trello_card(card, trello_list))
-    print(Items)
     return Items
 
-def trello_add_item(title):
+def trello_add_item(title, desc):
 
     uri_path = "/1/cards"
 
     querys = {
         "idList": session.get("todo_list_id"),
-        "name": title
+        "name": title,
+        "desc": desc
     }
 
     response = call_trello_api(uri_path, "POST", querys)
@@ -38,12 +38,25 @@ def trello_complete_item(id):
     uri_path = "/1/cards/" + id
 
     querys = {
-        "idList": session.get("done_list_id"),
+        "idList": session.get("done_list_id")
     }
 
     response = call_trello_api(uri_path, "PUT", querys)
 
     return http_status_text(response)
+
+def trello_todo_item(id):
+
+    uri_path = "/1/cards/" + id
+
+    querys = {
+        "idList": session.get("todo_list_id"),
+    }
+
+    response = call_trello_api(uri_path, "PUT", querys)
+
+    return http_status_text(response)
+
 
 def call_trello_api(uri_path,httpMethod,add_querys):
 
@@ -63,12 +76,13 @@ def  http_status_text(response):
         return "failed"
 
 class Item: 
-    def __init__(self, id, name, status = 'To Do'): 
+    def __init__(self, id, name, desc, status = 'To Do'): 
         self.id = id 
         self.name = name 
+        self.desc = desc 
         self.status = status 
     
     @classmethod 
     def from_trello_card(cls, card, list): 
-        return cls(card['id'], card['name'], list['name']) 
+        return cls(card['id'], card['name'], card['desc'], list['name']) 
 
