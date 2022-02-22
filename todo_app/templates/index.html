@@ -22,7 +22,7 @@
           </thead>
         {% for t in result %}
           <tr>
-            <td>{{ t['title'] }}</td><td>{{t['status']}}</td>
+            <td>{{ t['name'] }}</td><td>{{t['status']}}</td>
             <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
           </tr>
         {% endfor %}

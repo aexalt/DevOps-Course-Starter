@@ -5,6 +5,7 @@ from todo_app.data.session_items import get_items
 from todo_app.data.session_items import add_item
 from todo_app.data.session_items import get_item
 from todo_app.data.session_items import save_item
+from todo_app.data.trello_items import trello_get_items
 
 import requests
 import os
@@ -16,27 +17,7 @@ app.config.from_object(Config())
 @app.route('/')
 def index():
 
-    board_id = os.getenv("TRELLO_BOARD_ID")
-    url = "https://api.trello.com/1/boards/"+ board_id +"/lists/" 
-
-    querys = {
-        "key": os.getenv("TRELLO_API_KEY"),
-        "token": os.getenv("TRELLO_API_TOKEN"),
-        "cards": "open"
-    }
-
-    response = requests.request("GET", url, params=querys).json()
-    #respons_json = response.json()
-
-    print(response)
-    for trello_list in response:
-        for card in trello_list['cards']:
-            print(card)
-            card['status'] = trello_list['name']
-
-    items = response[0]['cards']
-
-    return render_template('index.html', result = get_items())
+    return render_template('index.html', result = trello_get_items())
 
 @app.route('/add', methods=['POST'])
 def add():
@@ -49,7 +30,7 @@ def add():
             error = 'no title'
     # the code below is executed if the request method
     # was GET or the credentials were invalid
-    return render_template('index.html', success="error ", result = get_items())
+    return render_template('index.html', success="error ", result = add_item())
 
 @app.route('/complete', methods=['GET'])
 def complete():
