@@ -1,4 +1,5 @@
 from flask import session
+from datetime import datetime
 import requests
 import os
 
@@ -76,13 +77,15 @@ def  http_status_text(response):
         return "failed"
 
 class Item: 
-    def __init__(self, id, name, desc, status = 'To Do'): 
+    def __init__(self, id, name, desc, due, status = 'To Do'): 
         self.id = id 
         self.name = name 
-        self.desc = desc 
+        self.desc = desc
+        #self.due = datetime.strptime(due, '%Y-%m-%dT%H:%M:%S.%fZ') 
         self.status = status 
+        
     
     @classmethod 
     def from_trello_card(cls, card, list): 
-        return cls(card['id'], card['name'], card['desc'], list['name']) 
+        return cls(card['id'], card['name'], card['desc'], card['due'], list['name']) 
 

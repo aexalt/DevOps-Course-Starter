@@ -17,8 +17,8 @@
               <th scope="col">title</th>
               <th scope="col">status</th>
               <th scope="col">description</th>
+              <th scope="col">due date</th>
               <th scope="col">action</th>
-
             </tr>
           </thead>
         {% for t in result %}
@@ -26,7 +26,8 @@
             <td>{{ t['name'] }}</td>
             <td>{{t['status']}}</td>
             <td>{{t['desc']}}</td>
-            
+            <td>{{t['due']}}</td>
+
             {% if t['status'] == "To Do"%}
               <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
             {% elif t['status'] == "Done"%}
@@ -50,11 +51,17 @@
       <input type="text" name="desc" id="desc" >
     </div>
     <div class="form-example">
+      <label for="due">Due date: </label>
+      <input type="text" name="due" id="due" data-provide="datepicker-inline"  data-date-format="dd/mm/yyyy">
+      <div class="input-group-addon">
+          <span class="glyphicon glyphicon-th"></span>
+    </div>
+  </div>
+    <div class="form-example">
       <input type="submit"  class="btn btn-primary" value="submit new!">
     </div>
   </form>
 
-  <div>
     {{success}}
   </div>
   
