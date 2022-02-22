@@ -8,27 +8,32 @@ def trello_get_items():
     querys = {
         "cards": "open"
     }
-    response = call_trello_api(uri_path, "GET", querys)
+    response = call_trello_api(uri_path, "GET", querys).json()
 
     for trello_list in response:
+        if trello_list['name'] == 'To Do':
+            session["list_id"] = trello_list['id']
         for card in trello_list['cards']:
             Items.append(Item.from_trello_card(card, trello_list))
-    return session.get('items', Items)
+    print(Items)
+    return Items
 
 def trello_add_item(title):
-    items = trello_get_items()
-    print(items)
+
     uri_path = "/1/cards"
-    # Determine the ID for the item based on that of the previously added item
-    #id = items[-1]['id'] + 1 if items else 0
 
-    item = { 'id': id, 'title': title, 'status': 'Not Started' }
+    querys = {
+        "idList": session.get("list_id")
+    }
 
-    # Add the item to the list
-    #items.append(item)
-    #session['items'] = items
+    response = call_trello_api(uri_path, "POST", querys)
 
-    return item
+    if(response.status_code) == 200:
+        result = "success"
+    else:
+        result = "failed to add"
+
+    return result
 
 def call_trello_api(uri_path,httpMethod,add_querys):
 
@@ -38,8 +43,7 @@ def call_trello_api(uri_path,httpMethod,add_querys):
         "token": os.getenv("TRELLO_API_TOKEN"),
     }
     querys.update(add_querys)
-    print(httpMethod, url, querys)
-    return requests.request(httpMethod, url, params=querys).json()
+    return requests.request(httpMethod, url, params=querys)
 
 class Item: 
     def __init__(self, id, name, status = 'To Do'): 

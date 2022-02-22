@@ -22,16 +22,11 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    error = None
-    if request.method == 'POST':
-        if not request.form['title'].isspace():
-            add_item(request.form['title'])
-            return render_template('index.html', success="successfully written", result = get_items())
-        else:
-            error = 'no title'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return render_template('index.html', success="error ", result = trello_add_item())
+    if not request.form['title'].isspace():
+        add_result = trello_add_item(request.form['title'])
+        return render_template('index.html', success=add_result, result = get_items())
+    else:
+        return render_template('index.html', success="No title given", result = get_items())
 
 @app.route('/complete', methods=['GET'])
 def complete():
