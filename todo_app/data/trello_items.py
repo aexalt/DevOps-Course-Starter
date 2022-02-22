@@ -12,7 +12,9 @@ def trello_get_items():
 
     for trello_list in response:
         if trello_list['name'] == 'To Do':
-            session["list_id"] = trello_list['id']
+            session["todo_list_id"] = trello_list['id']
+        elif trello_list['name'] == 'Done':
+            session["done_list_id"] = trello_list['id']
         for card in trello_list['cards']:
             Items.append(Item.from_trello_card(card, trello_list))
     print(Items)
@@ -23,18 +25,25 @@ def trello_add_item(title):
     uri_path = "/1/cards"
 
     querys = {
-        "idList": session.get("list_id"),
+        "idList": session.get("todo_list_id"),
         "name": title
     }
 
     response = call_trello_api(uri_path, "POST", querys)
 
-    if(response.status_code) == 200:
-        result = "success"
-    else:
-        result = "failed to add"
+    return http_status_text(response)
 
-    return result
+def trello_complete_item(id):
+
+    uri_path = "/1/cards/" + id
+
+    querys = {
+        "idList": session.get("done_list_id"),
+    }
+
+    response = call_trello_api(uri_path, "PUT", querys)
+
+    return http_status_text(response)
 
 def call_trello_api(uri_path,httpMethod,add_querys):
 
@@ -45,6 +54,13 @@ def call_trello_api(uri_path,httpMethod,add_querys):
     }
     querys.update(add_querys)
     return requests.request(httpMethod, url, params=querys)
+
+
+def  http_status_text(response):
+    if(response.status_code) == 200:
+        return "success"
+    else:
+        return "failed"
 
 class Item: 
     def __init__(self, id, name, status = 'To Do'): 

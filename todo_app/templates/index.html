@@ -23,7 +23,9 @@
         {% for t in result %}
           <tr>
             <td>{{ t['name'] }}</td><td>{{t['status']}}</td>
+            {% if t['status'] == "To Do"%}
             <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
+            {% endif %}
           </tr>
         {% endfor %}
         </table>

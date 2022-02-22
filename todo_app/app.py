@@ -7,6 +7,7 @@ from todo_app.data.session_items import get_item
 from todo_app.data.session_items import save_item
 from todo_app.data.trello_items import trello_get_items
 from todo_app.data.trello_items import trello_add_item
+from todo_app.data.trello_items import trello_complete_item
 
 import requests
 import os
@@ -32,9 +33,7 @@ def add():
 def complete():
     error = None
     if not request.args.get('id','').isspace():
-        item = get_item(request.args.get('id',''))
-        item['status'] = 'complete'
-        save_item(item)
-        return render_template('index.html', success="successfully written", result = get_items())
+        complete_result = trello_complete_item(request.args.get('id',''))
+        return render_template('index.html', success=complete_result, result = trello_get_items())
     else:
         return render_template('index.html', success="didnt get an item id", result = get_items())
