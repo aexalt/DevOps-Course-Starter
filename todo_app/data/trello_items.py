@@ -23,7 +23,8 @@ def trello_add_item(title):
     uri_path = "/1/cards"
 
     querys = {
-        "idList": session.get("list_id")
+        "idList": session.get("list_id"),
+        "name": title
     }
 
     response = call_trello_api(uri_path, "POST", querys)
@@ -40,7 +41,7 @@ def call_trello_api(uri_path,httpMethod,add_querys):
     url = "https://api.trello.com" + uri_path
     querys = {
         "key": os.getenv("TRELLO_API_KEY"),
-        "token": os.getenv("TRELLO_API_TOKEN"),
+        "token": os.getenv("TRELLO_API_TOKEN")
     }
     querys.update(add_querys)
     return requests.request(httpMethod, url, params=querys)

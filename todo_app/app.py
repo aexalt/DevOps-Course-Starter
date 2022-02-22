@@ -24,9 +24,9 @@ def index():
 def add():
     if not request.form['title'].isspace():
         add_result = trello_add_item(request.form['title'])
-        return render_template('index.html', success=add_result, result = get_items())
+        return render_template('index.html', success=add_result, result = trello_get_items())
     else:
-        return render_template('index.html', success="No title given", result = get_items())
+        return render_template('index.html', success="No title given", result = trello_get_items())
 
 @app.route('/complete', methods=['GET'])
 def complete():
