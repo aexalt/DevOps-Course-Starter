@@ -6,6 +6,7 @@ from todo_app.data.session_items import add_item
 from todo_app.data.session_items import get_item
 from todo_app.data.session_items import save_item
 from todo_app.data.trello_items import trello_get_items
+from todo_app.data.trello_items import trello_add_item
 
 import requests
 import os
@@ -30,7 +31,7 @@ def add():
             error = 'no title'
     # the code below is executed if the request method
     # was GET or the credentials were invalid
-    return render_template('index.html', success="error ", result = add_item())
+    return render_template('index.html', success="error ", result = trello_add_item())
 
 @app.route('/complete', methods=['GET'])
 def complete():
