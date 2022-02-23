@@ -20,14 +20,15 @@ def trello_get_items():
             Items.append(Item.from_trello_card(card, trello_list))
     return Items
 
-def trello_add_item(title, desc):
+def trello_add_item(title, desc, date):
 
     uri_path = "/1/cards"
 
     querys = {
         "idList": session.get("todo_list_id"),
         "name": title,
-        "desc": desc
+        "desc": desc,
+        "due": date
     }
 
     response = call_trello_api(uri_path, "POST", querys)
@@ -81,7 +82,7 @@ class Item:
         self.id = id 
         self.name = name 
         self.desc = desc
-        #self.due = datetime.strptime(due, '%Y-%m-%dT%H:%M:%S.%fZ') 
+        self.due = datetime_format(due)
         self.status = status 
         
     
@@ -89,3 +90,8 @@ class Item:
     def from_trello_card(cls, card, list): 
         return cls(card['id'], card['name'], card['desc'], card['due'], list['name']) 
 
+def datetime_format(value, format='%Y-%m-%dT%H:%M:%S.%fZ'):
+    if value is not None:
+        return datetime.strptime(value,format)
+    else:
+        return ""

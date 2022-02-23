@@ -9,9 +9,10 @@ from todo_app.data.trello_items import trello_get_items
 from todo_app.data.trello_items import trello_add_item
 from todo_app.data.trello_items import trello_complete_item
 from todo_app.data.trello_items import trello_todo_item
-
+from datetime import datetime
 import requests
 import os
+
 
 app = Flask(__name__)
 app.config.from_object(Config())
@@ -25,7 +26,7 @@ def index():
 @app.route('/add', methods=['POST'])
 def add():
     if not request.form['title'].isspace():
-        add_result = trello_add_item(request.form['title'], request.form['desc'])
+        add_result = trello_add_item(request.form['title'], request.form['desc'], request.form['datepicker'])
         return render_template('index.html', success=add_result, result = trello_get_items())
     else:
         return render_template('index.html', success="No title given", result = trello_get_items())
@@ -47,3 +48,4 @@ def reset():
         return render_template('index.html', success=reset_result, result = trello_get_items())
     else:
         return render_template('index.html', success="didnt get an item id", result = get_items())
+
