@@ -4,7 +4,7 @@ import requests
 import os
 
 def trello_get_items():
-    Items=[]
+    items=[]
     uri_path = "/1/boards/" + os.getenv("TRELLO_BOARD_ID") +"/lists"
     querys = {
         "cards": "open"
@@ -17,8 +17,8 @@ def trello_get_items():
         elif trello_list['name'] == 'Done':
             session["done_list_id"] = trello_list['id']
         for card in trello_list['cards']:
-            Items.append(Item.from_trello_card(card, trello_list))
-    return Items
+            items.append(Item.from_trello_card(card, trello_list))
+    return items
 
 def trello_add_item(title, desc, date):
 
@@ -94,4 +94,4 @@ def datetime_format(value, format='%Y-%m-%dT%H:%M:%S.%fZ'):
     if value is not None:
         return datetime.strptime(value,format)
     else:
-        return ""
+        return None
