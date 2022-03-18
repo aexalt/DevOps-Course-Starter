@@ -9,7 +9,6 @@ from datetime import datetime
 import requests
 import os
 
-
 app = Flask(__name__)
 app.config.from_object(Config())
 
@@ -55,3 +54,16 @@ class ViewModel:
         return self._items
     def result_message(self):
         return self._result_message
+    def todo_items(self):
+        return filter_items_by_status(self._items, "To Do")
+    def doing_items(self):
+        return filter_items_by_status(self._items, "Doing")
+    def done_items(self):
+        return filter_items_by_status(self._items, "Done")
+
+def filter_items_by_status(items, status):
+        filtered_items=[]
+        for item in items:
+            if item.status == status:
+                filtered_items.append(item)
+        return filtered_items
