@@ -21,7 +21,7 @@
               <th scope="col">action</th>
             </tr>
           </thead>
-        {% for t in result %}
+        {% for t in view_model.items %}
           <tr>
             <td>{{ t['name'] }}</td>
             <td>{{t['status']}}</td>
