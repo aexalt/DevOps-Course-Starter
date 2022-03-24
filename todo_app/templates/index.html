@@ -9,7 +9,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
+      <h2>To-do Items</h2>
       <ul class="list-group mb-4">
         <table class="table table-dark table-striped">
           <thead>
@@ -21,22 +21,62 @@
               <th scope="col">action</th>
             </tr>
           </thead>
-        {% for t in view_model.items %}
+        {% for t in view_model.todo_items() %}
           <tr>
             <td>{{ t['name'] }}</td>
             <td>{{t['status']}}</td>
             <td>{{t['desc']}}</td>
             <td>{{t['due']}}</td>
+            <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
 
-            {% if t['status'] == "To Do"%}
-              <td><a href="./complete?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Complete'></a></td>
-            {% elif t['status'] == "Done"%}
-              <td><a href="./reset?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Reset'></a></td>
-            {% endif %}
 
           </tr>
         {% endfor %}
         </table>
+        <h2>Doing Items</h2>
+        <ul class="list-group mb-4">
+          <table class="table table-dark table-striped">
+            <thead>
+              <tr>
+                <th scope="col">title</th>
+                <th scope="col">status</th>
+                <th scope="col">description</th>
+                <th scope="col">due date</th>
+                <th scope="col">action</th>
+              </tr>
+            </thead>
+          {% for t in view_model.doing_items() %}
+            <tr>
+              <td>{{ t['name'] }}</td>
+              <td>{{t['status']}}</td>
+              <td>{{t['desc']}}</td>
+              <td>{{t['due']}}</td>
+
+            </tr>
+          {% endfor %}
+          </table>
+          <h2>Complete Items</h2>
+          <ul class="list-group mb-4">
+            <table class="table table-dark table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">title</th>
+                  <th scope="col">status</th>
+                  <th scope="col">description</th>
+                  <th scope="col">due date</th>
+                  <th scope="col">action</th>
+                </tr>
+              </thead>
+            {% for t in view_model.done_items() %}
+              <tr>
+                <td>{{ t['name'] }}</td>
+                <td>{{t['status']}}</td>
+                <td>{{t['desc']}}</td>
+                <td>{{t['due']}}</td>
+                <td><a href="./reset?id={{ t['id'] }}"><input type=button class="btn btn-success" value='Reset'></a></td>
+              </tr>
+            {% endfor %}
+            </table>
       </ul>
     </div>
   </div>
