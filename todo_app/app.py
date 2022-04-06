@@ -30,7 +30,7 @@ def create_app():
 
     @app.route('/complete', methods=['GET'])
     def complete():
-        if not request.args.get('id','').isspace():
+        if request.args.get('id'):
             result_message = trello_complete_item(request.args.get('id',''))
         else:
             result_message = "didnt get an item id"
@@ -39,7 +39,7 @@ def create_app():
 
     @app.route('/reset', methods=['GET'])
     def reset():
-        if not request.args.get('id','').isspace():
+        if request.args.get('id'):
             result_message = trello_todo_item(request.args.get('id',''))
         else:
             result_message = "didnt get an item id"

@@ -15,6 +15,7 @@ class TestItemViewModel:
 
         #assert
         assert len(filtered_items) == 2
+        assert filtered_items[0].status == "To Do"
 
     @staticmethod
     def test_doing_items():
