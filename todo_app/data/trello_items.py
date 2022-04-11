@@ -73,7 +73,7 @@ def call_trello_api(uri_path,httpMethod,add_querys):
 
 def  http_status_text(response):
     if(response.status_code) == 200:
-        return "success"
+        return "successful"
     else:
         return "failed"
 

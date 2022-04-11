@@ -58,4 +58,4 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ###TESTING
 
-Run all from the testing tab in VSCode
+Run all from the testing tab in VSCode or poetry run pytest test

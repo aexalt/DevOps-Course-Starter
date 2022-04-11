@@ -23,9 +23,9 @@ def test_index_page(monkeypatch, client):
 
 def test_complete(monkeypatch, client):
     monkeypatch.setattr(trello_items, 'call_trello_api', get_lists_stub)
-    response = client.get('/complete')
+    response = client.get('/complete?id=123abc')
     assert response.status_code == 200
-    assert 'success' in response.data.decode()
+    assert 'successful' in response.data.decode()
 
 class StubResponse():
     def __init__(self, fake_response_data):
