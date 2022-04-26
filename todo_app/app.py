@@ -9,39 +9,63 @@ from datetime import datetime
 import requests
 import os
 
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config())
 
-app = Flask(__name__)
-app.config.from_object(Config())
 
+    @app.route('/')
+    def index():
+        item_view_model = ViewModel(items = trello_get_items(), result_message=None)
+        return render_template('index.html', view_model=item_view_model)
 
-@app.route('/')
-def index():
+    @app.route('/add', methods=['POST'])
+    def add():
+        if not request.form['title'].isspace():
+            result_message = trello_add_item(request.form['title'], request.form['desc'], request.form['datepicker'])
+        else:
+            result_message = "No title given"
+        item_view_model = ViewModel(trello_get_items(), result_message)
+        return render_template('index.html', view_model=item_view_model)
 
-    return render_template('index.html', result = trello_get_items())
+    @app.route('/complete', methods=['GET'])
+    def complete():
+        if request.args.get('id'):
+            result_message = trello_complete_item(request.args.get('id',''))
+        else:
+            result_message = "didnt get an item id"
+        item_view_model = ViewModel(trello_get_items(), result_message)
+        return render_template('index.html', view_model=item_view_model)
 
-@app.route('/add', methods=['POST'])
-def add():
-    if not request.form['title'].isspace():
-        add_result = trello_add_item(request.form['title'], request.form['desc'], request.form['datepicker'])
-        return render_template('index.html', result_message=add_result, result = trello_get_items())
-    else:
-        return render_template('index.html', result_message="No title given", result = trello_get_items())
+    @app.route('/reset', methods=['GET'])
+    def reset():
+        if request.args.get('id'):
+            result_message = trello_todo_item(request.args.get('id',''))
+        else:
+            result_message = "didnt get an item id"
+        item_view_model = ViewModel(trello_get_items(), result_message)
+        return render_template('index.html', view_model=item_view_model)
 
-@app.route('/complete', methods=['GET'])
-def complete():
-    error = None
-    if not request.args.get('id','').isspace():
-        complete_result = trello_complete_item(request.args.get('id',''))
-        return render_template('index.html', result_message=complete_result, result = trello_get_items())
-    else:
-        return render_template('index.html', result_message="didnt get an item id", result = get_items())
+    return app
+class ViewModel:
+    def __init__(self, items, result_message):
+        self._items = items
+        self._result_message = result_message
+    @property
+    def items(self):
+        return self._items
+    def result_message(self):
+        return self._result_message
+    def todo_items(self):
+        return filter_items_by_status(self._items, "To Do")
+    def doing_items(self):
+        return filter_items_by_status(self._items, "Doing")
+    def done_items(self):
+        return filter_items_by_status(self._items, "Done")
 
-@app.route('/reset', methods=['GET'])
-def reset():
-    error = None
-    if not request.args.get('id','').isspace():
-        reset_result = trello_todo_item(request.args.get('id',''))
-        return render_template('index.html', result_message=reset_result, result = trello_get_items())
-    else:
-        return render_template('index.html', result_message="didnt get an item id", result = get_items())
-
+def filter_items_by_status(items, status):
+        filtered_items=[]
+        for item in items:
+            if item.status == status:
+                filtered_items.append(item)
+        return filtered_items
