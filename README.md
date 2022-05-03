@@ -63,6 +63,6 @@ Run all from the testing tab in VSCode or poetry run pytest test
 
 #### Provision a VM from an Ansible Control Node
 
-copy the files from folder ansible_files/ to your host node then run
+copy the files from folder ansible_files/ to your controller node then run
 > ansible-playbook todo-playbook.yml -i ansible-inventory
 note: inventory will be needed to be edited for appropriate slave node IPs

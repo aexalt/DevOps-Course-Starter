@@ -5,12 +5,12 @@
     - name: trello_key
       prompt: What is your trello key?
       private: no
-      default: '4effc87f8e3d5da536c3f923d87aacd6'
+      default: ''
 
     - name: trello_token
       prompt: What is your trello token?
       private: no
-      default: 'fe1682e1d7089060fdbd4321a87c27b598eb381c348707a7b23a345c5405af31'
+      default: ''
 
     - name: trello_board_id
       prompt: What is your trello board id?
@@ -50,14 +50,13 @@
 
   - name: Copy to Host
     ansible.builtin.template:
-    src: .env.j2
-    dest: /opt/todoapp/.env
+      src: .env.j2
+      dest: /opt/todoapp/.env
 
   - name: Copy service
     ansible.builtin.copy:
       src: /opt/todoapp/todoapp.service
       dest: /etc/systemd/system/todoapp.service
-      mode: '+x'
       remote_src: yes
     become: yes
 
