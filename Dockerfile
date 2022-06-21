@@ -14,6 +14,6 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev
 WORKDIR /
 RUN chmod +x ./run.sh
-EXPOSE 8000
+EXPOSE 5000
 
-ENTRYPOINT ["sh", "run.sh"]
+ENTRYPOINT ["poetry", "run", "gunicorn", "-b", "0.0.0.0:5000", "todo_app.app:create_app()"]
