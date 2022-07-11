@@ -66,3 +66,11 @@ Run all from the testing tab in VSCode or poetry run pytest test
 copy the files from folder ansible_files/ to your controller node then run
 > ansible-playbook todo-playbook.yml -i ansible-inventory
 note: inventory will be needed to be edited for appropriate slave node IPs
+
+
+###Docker image build
+ docker build --target development --tag todo-app:dev .
+ docker build --target production --tag todo-app:prod .
+
+Dev -   docker run --env-file .env todo-app:dev
+Prd -   docker run --env-file .env todo-app:prod
