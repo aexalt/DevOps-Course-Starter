@@ -23,5 +23,5 @@ ENTRYPOINT [ "poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 FROM base as test
 RUN pip3 install pytest
 RUN poetry install
-WORKDIR /
+COPY /test /test
 ENTRYPOINT [ "poetry", "run", "pytest", "test"]
