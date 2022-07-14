@@ -74,3 +74,8 @@ note: inventory will be needed to be edited for appropriate slave node IPs
 
 Dev -   docker run --env-file .env todo-app:dev
 Prd -   docker run --env-file .env todo-app:prod
+
+#####Run tests in docker via ci pipeline
+run the pipeline in github
+
+or docker run --env-file .env todo-app:test
