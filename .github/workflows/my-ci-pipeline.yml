@@ -29,5 +29,5 @@ jobs:
           username: "aexalt"
           password: ${{ secrets.DOCKER_API_KEY }}
    - uses: actions/checkout@v2 
-   - run: docker build --target production --tag todo-app:latest .
-   - run: docker push todo-app:latest
+   - run: docker build --target production --tag aexalt:latest .
+   - run: docker push aexalt:latest
