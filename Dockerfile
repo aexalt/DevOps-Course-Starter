@@ -21,7 +21,6 @@ RUN poetry install
 ENTRYPOINT [ "poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 
 FROM base as test
-RUN pip3 install pytest
 COPY /test /test
 COPY .env.test /
 RUN poetry install
