@@ -19,3 +19,9 @@ EXPOSE 5000
 FROM base as development
 RUN poetry install
 ENTRYPOINT [ "poetry", "run", "flask", "run", "--host", "0.0.0.0"]
+
+FROM base as test
+COPY /test /test
+COPY .env.test /
+RUN poetry install
+ENTRYPOINT [ "poetry", "run", "pytest", "test"]

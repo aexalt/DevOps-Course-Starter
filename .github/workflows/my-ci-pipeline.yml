@@ -1,0 +1,32 @@
+name: Continuous Integration 
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    paths-ignore:
+      - 'README.md'    
+
+jobs: 
+ build: 
+  name: Build and test 
+  runs-on: ubuntu-latest 
+  steps: 
+   - uses: actions/checkout@v2 
+   - run: docker build --target test --tag todo-app:test .
+   - run: docker run --env-file .env.test todo-app:test
+  
+ publish:
+  name: Pubish artefacts
+  needs: build
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+  steps:
+   - run: echo "publishing"
+   - uses: docker/login-action@v2
+     with:
+          username: "aexalt"
+          password: ${{ secrets.DOCKER_API_KEY }}
+   - uses: actions/checkout@v2 
+   - run: docker build --target production --tag aexalt/todo-app:latest .
+   - run: docker push aexalt/todo-app:latest

@@ -75,3 +75,11 @@ note: inventory will be needed to be edited for appropriate slave node IPs
 Dev -   docker run --env-file .env -p 5000:5000 --mount type=bind,source="$(pwd)"/todo_app,target=/todo_app todo-app:dev
 
 Prd -   docker run --env-file .env -p 5000:5000 todo-app:prod
+
+#####Run tests in docker via ci pipeline
+run the pipeline in github
+
+or 
+docker build --target test --tag todo-app:test .
+docker run --env-file .env.test todo-app:test
+
