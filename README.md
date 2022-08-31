@@ -82,21 +82,3 @@ run the pipeline in github
 or 
 docker build --target test --tag todo-app:test .
 docker run --env-file .env.test todo-app:test
-
-######to deploy to heroku from the cli
-
-heroku login
-heroku container:login
-docker tag aexalt/todo-app  registry.heroku.com/alt-devops-p8/web
-docker push registry.heroku.com/alt-devops-p8/web
-heroku container:release web -a alt-devops-p8
-heroku open -a alt-devops-p8
-
-the url: https://alt-devops-p8.herokuapp.com/complete?id=6214faf355e1305a22b0de5c
-
-
-
-
-LV21_AndyLee-Tuffnell_ProjectExercise 
-alt_apps_300822
-alt-web-app-300822
