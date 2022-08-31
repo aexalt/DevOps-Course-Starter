@@ -13,9 +13,9 @@ WORKDIR /
 #RUN chmod +x ./run.sh
 
 FROM base as production
-ENTRYPOINT ["poetry", "run", "gunicorn", "-b", "0.0.0.0:5000", "todo_app.app:create_app()"]
+ENTRYPOINT ["poetry", "run", "gunicorn", "-b", "0.0.0.0:8080", "todo_app.app:create_app()"]
 ##CMD poetry run gunicorn "todo_app.app:create_app()" bind 0.0.0.0:$PORT
-EXPOSE 5000
+EXPOSE 8080
 
 FROM base as development
 RUN poetry install
