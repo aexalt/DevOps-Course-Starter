@@ -30,4 +30,4 @@ jobs:
    - uses: actions/checkout@v2 
    - run: docker build --target production --tag aexalt/todo-app:latest .
    - run: docker push aexalt/todo-app:latest
-   - run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK }}
+   - run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK }} 
