@@ -2,33 +2,29 @@ from flask import session
 from datetime import datetime
 import requests
 import os
+import pymongo
 
 def trello_get_items():
     items=[]
-    uri_path = "/1/boards/" + os.getenv("TRELLO_BOARD_ID") +"/lists"
+    uri_path = "" 
     querys = {
         "cards": "open"
     }
-    response = call_trello_api(uri_path, "GET", querys).json()
+    response = call_trello_api(uri_path, "GET", querys)
 
     for trello_list in response:
-        if trello_list['name'] == 'To Do':
-            session["todo_list_id"] = trello_list['id']
-        elif trello_list['name'] == 'Done':
-            session["done_list_id"] = trello_list['id']
-        for card in trello_list['cards']:
-            items.append(Item.from_trello_card(card, trello_list))
+        items.append(Item.from_trello_card(trello_list))
     return items
 
 def trello_add_item(title, desc, date):
 
-    uri_path = "/1/cards"
+    uri_path = ""
 
     querys = {
-        "idList": session.get("todo_list_id"),
         "name": title,
         "desc": desc,
-        "due": date
+        "due": date,
+        "status": "To Do"
     }
 
     response = call_trello_api(uri_path, "POST", querys)
@@ -37,10 +33,10 @@ def trello_add_item(title, desc, date):
 
 def trello_complete_item(id):
 
-    uri_path = "/1/cards/" + id
+    uri_path = id
 
     querys = {
-        "idList": session.get("done_list_id")
+        "status": "Done"
     }
 
     response = call_trello_api(uri_path, "PUT", querys)
@@ -49,10 +45,10 @@ def trello_complete_item(id):
 
 def trello_todo_item(id):
 
-    uri_path = "/1/cards/" + id
+    uri_path = id
 
     querys = {
-        "idList": session.get("todo_list_id"),
+         "status": "To Do",
     }
 
     response = call_trello_api(uri_path, "PUT", querys)
@@ -60,19 +56,25 @@ def trello_todo_item(id):
     return http_status_text(response)
 
 
-def call_trello_api(uri_path,httpMethod,add_querys):
+def call_trello_api(id,httpMethod,add_querys):
 
-    url = "https://api.trello.com" + uri_path
-    querys = {
-        "key": os.getenv("TRELLO_API_KEY"),
-        "token": os.getenv("TRELLO_API_TOKEN")
-    }
-    querys.update(add_querys)
-    return requests.request(httpMethod, url, params=querys)
+    #url = "https://api.trello.com" + uri_path
+    client = pymongo.MongoClient(os.getenv("MONGO_CONNECTION_STRING"))
+    db = client[os.getenv("MONGO_DB_NAME")]
+    collection = db["listcollection"]
+
+    if(httpMethod == "POST"):
+        result = collection.insert_one(add_querys)
+    elif(httpMethod == "PUT"):
+        result = collection.update_one({'_id':id}, { "$set": add_querys })
+    else:
+        result = collection.find()
+
+    return result
 
 
 def  http_status_text(response):
-    if(response.status_code) == 200:
+    if(response.acknowledged):
         return "successful"
     else:
         return "failed"
@@ -82,15 +84,21 @@ class Item:
         self.id = id 
         self.name = name 
         self.desc = desc
-        self.due = datetime_format(due)
+        self.due = due
         self.status = status 
         
     
     @classmethod 
-    def from_trello_card(cls, card, list): 
-        return cls(card['id'], card['name'], card['desc'], card['due'], list['name']) 
+    def from_trello_card(cls, card): 
+        return cls(card['_id'], card['name'], card['desc'], card['due'], card['status']) 
 
-def datetime_format(value, format='%Y-%m-%dT%H:%M:%S.%fZ'):
+def datetime_format_old(value, format='%Y-%m-%dT%H:%M:%S.%fZ'):
+    if value is not None:
+        return datetime.strptime(value,format)
+    else:
+        return None
+
+def datetime_format(value, format='%m/%d/%Y'):
     if value is not None:
         return datetime.strptime(value,format)
     else:
