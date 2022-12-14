@@ -1,5 +1,6 @@
 import pytest
 import mongomock
+import os
 from todo_app.data import trello_items
 from dotenv import load_dotenv, find_dotenv
 from todo_app import app
