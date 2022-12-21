@@ -82,3 +82,6 @@ run the pipeline in github
 or 
 docker build --target test --tag todo-app:test .
 docker run --env-file .env.test todo-app:test
+
+url
+https://alt-proj9-310822.azurewebsites.net/
