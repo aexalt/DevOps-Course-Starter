@@ -83,13 +83,3 @@ or
 docker build --target test --tag todo-app:test .
 docker run --env-file .env.test todo-app:test
 
-######to deploy to heroku from the cli
-
-heroku login
-heroku container:login
-docker tag aexalt/todo-app  registry.heroku.com/alt-devops-p8/web
-docker push registry.heroku.com/alt-devops-p8/web
-heroku container:release web -a alt-devops-p8
-heroku open -a alt-devops-p8
-
-the url: https://alt-devops-p8.herokuapp.com
