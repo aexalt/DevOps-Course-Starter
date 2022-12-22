@@ -16,6 +16,7 @@ def create_app():
     app.config.from_object(Config())
     app.config['LOGIN_DISABLED'] = os.getenv('LOGIN_DISABLED') == 'True'
 
+
     login_manager = LoginManager()
     @login_manager.unauthorized_handler
     def unauthenticated():
@@ -49,8 +50,14 @@ def create_app():
         return redirect("/")
 
     class User(UserMixin): 
-         def __init__(self, id): 
+        def __init__(self, id): 
             self.id = id 
+
+        if app.config['LOGIN_DISABLED'] == False:
+            if id == 'aexalt':
+                self.role = "writer"
+            else:
+                self.role ="reader" 
 
     @app.route('/')
     @login_required
@@ -58,10 +65,13 @@ def create_app():
         item_view_model = ViewModel(items = trello_get_items(), result_message=None)
         return render_template('index.html', view_model=item_view_model)
 
-    
     @app.route('/add', methods=['POST'])
     @login_required
     def add():
+        if app.config['LOGIN_DISABLED'] == False:
+            if current_user.role == "reader":
+                return "Insufficent access", 403
+
         if not request.form['title'].isspace():
             result_message = trello_add_item(request.form['title'], request.form['desc'], request.form['datepicker'])
         else:
@@ -72,6 +82,10 @@ def create_app():
     @app.route('/complete', methods=['GET'])
     @login_required
     def complete():
+        if app.config['LOGIN_DISABLED'] == False:
+            if current_user.role == "reader":
+                return "Insufficent access", 403
+
         if request.args.get('id'):
             result_message = trello_complete_item(request.args.get('id',''))
         else:
@@ -82,6 +96,10 @@ def create_app():
     @app.route('/reset', methods=['GET'])
     @login_required
     def reset():
+        if app.config['LOGIN_DISABLED'] == False:
+            if current_user.role == "reader":
+                return "Insufficent access", 403
+
         if request.args.get('id'):
             result_message = trello_todo_item(request.args.get('id',''))
         else:
