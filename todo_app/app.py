@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask import request, redirect
 from flask_login import LoginManager
-from flask_login import login_required
+from flask_login import login_required, UserMixin, login_user
 from todo_app.flask_config import Config
 from todo_app.data.trello_items import trello_get_items
 from todo_app.data.trello_items import trello_add_item
@@ -24,6 +24,7 @@ def create_app():
         pass # Add logic to redirect to the GitHub OAuth flow when unauthenticated
     @login_manager.user_loader
     def load_user(user_id):
+        return User(user_id)
         pass # We will return to this later
     login_manager.init_app(app)
 
@@ -41,6 +42,15 @@ def create_app():
 
         api_response = requests.get("https://api.github.com/user", headers = auth_header)
 
+        user = User(api_response.json()['login'])
+
+        login_user(user)
+
+        return redirect("/")
+
+    class User(UserMixin): 
+         def __init__(self, id): 
+            self.id = id 
 
     @app.route('/')
     @login_required
