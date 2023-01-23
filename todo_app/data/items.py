@@ -4,19 +4,19 @@ import requests
 import os
 import pymongo
 
-def trello_get_items():
+def get_items():
     items=[]
     uri_path = "" 
     querys = {
         "cards": "open"
     }
-    response = call_trello_api(uri_path, "GET", querys)
+    response = call_db_api(uri_path, "GET", querys)
 
     for trello_list in response:
-        items.append(Item.from_trello_card(trello_list))
+        items.append(Item.from_card(trello_list))
     return items
 
-def trello_add_item(title, desc, date):
+def add_item(title, desc, date):
 
     uri_path = ""
 
@@ -27,11 +27,11 @@ def trello_add_item(title, desc, date):
         "status": "To Do"
     }
 
-    response = call_trello_api(uri_path, "POST", querys)
+    response = call_db_api(uri_path, "POST", querys)
 
     return http_status_text(response)
 
-def trello_complete_item(id):
+def complete_item(id):
 
     uri_path = id
 
@@ -39,11 +39,11 @@ def trello_complete_item(id):
         "status": "Done"
     }
 
-    response = call_trello_api(uri_path, "PUT", querys)
+    response = call_db_api(uri_path, "PUT", querys)
 
     return http_status_text(response)
 
-def trello_todo_item(id):
+def todo_item(id):
 
     uri_path = id
 
@@ -51,12 +51,12 @@ def trello_todo_item(id):
          "status": "To Do",
     }
 
-    response = call_trello_api(uri_path, "PUT", querys)
+    response = call_db_api(uri_path, "PUT", querys)
 
     return http_status_text(response)
 
 
-def call_trello_api(id,httpMethod,add_querys):
+def call_db_api(id,httpMethod,add_querys):
 
     #url = "https://api.trello.com" + uri_path
     client = pymongo.MongoClient(os.getenv("MONGO_CONNECTION_STRING"))
@@ -89,7 +89,7 @@ class Item:
         
     
     @classmethod 
-    def from_trello_card(cls, card): 
+    def from_card(cls, card): 
         return cls(card['_id'], card['name'], card['desc'], card['due'], card['status']) 
 
 def datetime_format_old(value, format='%Y-%m-%dT%H:%M:%S.%fZ'):

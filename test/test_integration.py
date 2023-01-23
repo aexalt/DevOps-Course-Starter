@@ -1,7 +1,7 @@
 import pytest
 import mongomock
 import os
-from todo_app.data import trello_items
+from todo_app.data import items
 from dotenv import load_dotenv, find_dotenv
 from todo_app import app
 
@@ -19,15 +19,13 @@ def client():
 
 def test_index_page(monkeypatch, client):
 
-    trello_items.trello_add_item("Test card", "descrp", "")
+    items.add_item("Test card", "descrp", "")
     response = client.get('/')
     assert response.status_code == 200
     assert 'Test card' in response.data.decode()
 
 
 def test_complete(monkeypatch, client):
-    #monkeypatch.setattr(trello_items, 'call_trello_api', get_lists_stub)
-
     response = client.get('/complete?id=1')
     assert response.status_code == 200
     assert 'successful' in response.data.decode()
