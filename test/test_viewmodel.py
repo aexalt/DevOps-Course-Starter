@@ -1,5 +1,5 @@
 from todo_app.app import ViewModel
-from todo_app.data.trello_items import Item
+from todo_app.data.items import Item
 
 class TestItemViewModel:
 
