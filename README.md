@@ -88,6 +88,8 @@ https://alt-proj9-310822.azurewebsites.net/
 
 
 ##### MONGO changes
-need to instail
-pip install pymongo
-pip install mongomock
+run the following:
+
+poetry add pymongo
+poetry run python
+import pymongo

@@ -92,12 +92,7 @@ class Item:
     def from_card(cls, card): 
         return cls(card['_id'], card['name'], card['desc'], card['due'], card['status']) 
 
-def datetime_format_old(value, format='%Y-%m-%dT%H:%M:%S.%fZ'):
-    if value is not None:
-        return datetime.strptime(value,format)
-    else:
-        return None
-
+ 
 def datetime_format(value, format='%m/%d/%Y'):
     if value is not None:
         return datetime.strptime(value,format)
